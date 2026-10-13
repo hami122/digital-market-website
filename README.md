@@ -1,25 +1,26 @@
-# Digital Market — отдельный русскоязычный сайт
+# Digital Market — standalone website
 
-Независимый от Telegram-бота демонстрационный интернет-магазин цифровых товаров.
+This is a **separate** Node.js store, unrelated to any Telegram bot. Node >=18, no external packages. Russian storefront and password-protected `/admin`.
 
-## Локальный запуск
+## Railway setup
 
-1. Установите Node.js 18 или новее.
-2. В папке проекта выполните `npm start`.
-3. Откройте http://localhost:3000.
+1. Upload the contents of this folder to the **website's own GitHub repository**, not the Telegram bot repository.
+2. In Railway, deploy that repository, with start command `npm start`.
+3. Set `ADMIN_PASSWORD` to a unique strong password of at least 12 characters. Do not commit passwords to GitHub.
+4. Attach a persistent Railway Volume mounted at `/data`; set `DATA_DIR=/data` in Variables **before accepting orders**. Without the volume, products, orders and customers may be lost on redeploy.
+5. Generate a Railway public domain; visit `https://YOUR_DOMAIN/admin` to log in.
+6. In the admin panel, configure **Настройки и оплата** (store title, currency, manager contact, manual payment instructions and whether orders are accepted).
 
-## Размещение на Railway
+## Included
 
-1. Создайте **новый** репозиторий GitHub (не используйте репозиторий существующего бота).
-2. Загрузите файлы этого проекта в корень репозитория.
-3. Railway → New Project → Deploy from GitHub Repo → выберите новый репозиторий.
-4. Команда запуска: `npm start` (Railway обычно распознает её автоматически).
-5. Railway → сервис сайта → Settings → Networking → Generate Domain.
+- Admin: password login, product create/edit/delete, categories via product category field, stock and visibility, order statuses, customer list, payment instructions, accepting/pausing orders.
+- Public: catalog, categories, search, cart, order submission and confirmation ID. Orders saved server-side. Total calculated on server, not trusted from browser.
+- Data stored in `products.json` and `store.json` in `DATA_DIR`.
 
-## Важно перед запуском реального магазина
+## Important limitations
 
-- Каталог — демонстрационные товары с примерными ценами. Замените их своими товарами.
-- Кнопка заказа **не принимает оплату и не отправляет заказ**.
-- Кнопка ⚙ открывает **демо-редактор** без авторизации. Данные сохраняются **только в localStorage текущего браузера**, не на сервере и не видны другим пользователям. Это **не безопасная административная панель**.
-- Для реальной торговли нужны: серверная база данных, авторизация администратора, защищённые API, реальные заказы, интеграция оплаты и автоматической выдачи, политика конфиденциальности и условия продаж.
-- Telegram-бот и его база данных никак не используются и не изменяются.
+- **No real online payment processor** or automatic delivery; admin manually confirms payment and fulfills orders. Never claim a customer paid merely because they submitted an order.
+- No customer accounts/login; customer directory is based on order contact information. No standalone category editor; categories are derived from products.
+- Admin session tokens are in server memory and reset on restart. Single-instance deployment recommended. Back up Railway Volume regularly.
+- The website is independent of Telegram. No shared database or API.
+- Before production, publish privacy/terms and configure operational protections, notification workflows and backups appropriate to your business.
