@@ -24,3 +24,6 @@ This is a **separate** Node.js store, unrelated to any Telegram bot. Node >=18, 
 - Admin session tokens are in server memory and reset on restart. Single-instance deployment recommended. Back up Railway Volume regularly.
 - The website is independent of Telegram. No shared database or API.
 - Before production, publish privacy/terms and configure operational protections, notification workflows and backups appropriate to your business.
+
+## Product photos
+Admin: `/admin` > Товары > Фото товара. Upload PNG/JPEG/WEBP up to 5 MB. Uploaded files live under `DATA_DIR/uploads` and are served from `/uploads/`. Set `DATA_DIR=/data` and mount a persistent Railway Volume at `/data`. Uploaded images are not automatically deleted when removed from a product.
